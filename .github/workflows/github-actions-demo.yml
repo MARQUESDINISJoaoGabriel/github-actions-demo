@@ -1,6 +1,5 @@
-name: Full CI/CD
+name: Node.js CI
 
-# Déclencheurs du workflow
 on:
   push:
     branches: [ main ]
@@ -8,25 +7,22 @@ on:
     branches: [ main ]
 
 jobs:
-
-  python-tests:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.14"
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: "20"
 
-      - name: Install Python dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pytest
+    - name: Install dependencies
+      run: npm ci
 
-      - name: Run Python tests
-        run: |
-          pytest
+    - name: Run Cypress tests
+      run: npx cypress run
 
   node-cypress:
     runs-on: ubuntu-latest
